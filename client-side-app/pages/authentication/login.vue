@@ -84,6 +84,7 @@ export default {
   data() {
     return {
       details: {
+        _token: '{{ csrf_token() }}',
         email: 'johnson.gitonga@oxygene.co.ke',
         password: '111',
         // email: 'alfred.maina@oxygene.co.ke',
