@@ -56,7 +56,7 @@ export default {
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: process.env.baseUrl || 'http://oxygene-portal.test',
+        url: process.env.BASE_URL,
         endpoints: {
           login: {
             url: '/api/login',
@@ -91,5 +91,12 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: [
+      '@nuxtjs/auth-next'
+    ],
+  },
+  // https://nuxtjs.org/blog/going-full-static
+  target: 'static'
+  
 }
