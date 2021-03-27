@@ -17,20 +17,25 @@ class RoleSeeder extends Seeder
         DB::table('roles')->delete();
 
         DB::table('roles')->insert(array (
-            0 => 
+            1 => 
             array (
                 'label' => "Super Admin",
                 'description' => "A super admin user has the ability to manage all the system's functionalities.",
             ),
-            1 => 
+            2 => 
             array (
                 'label' => "Admin",
                 'description' => "An admin has the ability to manage a few of the system's functionalities.",
             ),
-            2 => 
+            3 => 
             array (
                 'label' => "Employee",
                 'description' => "An employee has the ability to manage ...",
+            ),
+            4 => 
+            array (
+                'label' => "Client",
+                'description' => "An client has the ability to manage ...",
             ),
         ));
 

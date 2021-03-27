@@ -27,15 +27,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // register
-Route::get('register', function(Request $request){
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => bcrypt($request->password)
-    ]);
-
-    return $user;
-});
+Route::post('register', 'Auth\RegisterController@register')->name('register');
+Route::post('login', 'Auth\LoginController@login')->name('login');
 
 // login
 Route::post('login', function(Request $request){
@@ -53,12 +46,14 @@ Route::post('login', function(Request $request){
 });
 
 // logout
-Route::post('logout', function(Request $request){
-    auth()->guard('web')->logout();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', function(Request $request){
+        auth()->guard('web')->logout();
 
-    $request->session()->invalidate();
+        $request->session()->invalidate();
 
-    $request->session()->regenerateToken();
+        $request->session()->regenerateToken();
 
-    return response()->json(null, 200);
+        return response()->json(null, 200);
+    });
 });

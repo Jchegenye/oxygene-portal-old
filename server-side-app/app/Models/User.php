@@ -17,11 +17,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'nickname',
-        'phone_number',
         'role_id',
         'agreement',
     ];
@@ -49,7 +49,7 @@ class User extends Authenticatable
      * Get the roles associated with the user.
      */
     public function roles(){
-        return $this->belongsTo('App\Models\Role');
+        return $this->belongsTo(User::class, 'role_id');
     }
 
 }

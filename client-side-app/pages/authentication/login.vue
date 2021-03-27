@@ -48,7 +48,7 @@
             />
           </a-input>
         </a-form-item>
-        <a-form-item>
+        <a-form-item class="mb-0">
           <a-checkbox
             v-decorator="[
               'remember',
@@ -80,25 +80,28 @@
 
 <script>
 export default {
+  name: 'Login',
   middleware: ['guest'],
   data() {
     return {
       details: {
-        _token: '{{ csrf_token() }}',
+        // _token: this.csrf,
         email: 'johnson.gitonga@oxygene.co.ke',
         password: '111',
         // email: 'alfred.maina@oxygene.co.ke',
         // password: '111',
       },
+      csrf: '',
     }
   },
-  // computed: {
-  //   urlTest() {
-  //     return process.env.baseUrl
-  //   },
-  // },
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'normal_login' })
+  },
+  mounted() {
+    const Laravel = {
+      csrfToken: '{{csrf_token()}}',
+    }
+    this.csrf = Laravel.csrfToken
   },
   methods: {
     handleSubmit(e) {

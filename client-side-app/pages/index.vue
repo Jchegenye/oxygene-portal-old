@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex-center position-ref full-height">
+    <div class="flex-center position-ref full-height text-center">
       <div class="text-center">
         <Logo />
         <Tagline />
@@ -22,6 +22,7 @@
 
 <script>
 export default {
+  name: 'Lounge',
   methods: {
     async logout() {
       try {

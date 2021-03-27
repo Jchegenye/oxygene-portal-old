@@ -89,7 +89,7 @@
           </a-input>
         </a-form-item>
 
-        <a-form-item>
+        <a-form-item class="mb-0">
           <NuxtLink to="/authentication/registration" class="login-form-forgot"
             >Register</NuxtLink
           >
@@ -106,6 +106,7 @@
 
 <script>
 export default {
+  name: 'ResetPassword',
   middleware: ['auth'],
   data() {
     return {
