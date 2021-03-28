@@ -3,43 +3,43 @@
     <div>
       <Logo />
       <Tagline />
-      <a-form
+      <FormAlerts :errors="error" />
+
+      <a-form-model
         id="components-form-demo-normal-login"
-        :form="form"
+        ref="ruleForm"
+        :model="ruleForm"
+        :rules="rules"
         class="login-form"
-        @submit="handleSubmit"
       >
-        <a-form-item>
-          <a-input
-            v-decorator="[
-              'userName',
-              {
-                rules: [
-                  { required: true, message: 'Please input your username!' },
-                ],
-              },
-            ]"
-            placeholder="Username"
-          >
+        <!-- email -->
+        <a-form-model-item
+          prop="email"
+          :help="validationErrors ? validationErrors.email : ''"
+          :validate-status="error.status"
+          has-feedback
+        >
+          <a-input v-model="ruleForm.email" type="email" placeholder="E-mail *">
             <a-icon
               slot="prefix"
               type="user"
               style="color: rgba(0, 0, 0, 0.25)"
             />
           </a-input>
-        </a-form-item>
-        <a-form-item>
+        </a-form-model-item>
+
+        <a-form-model-item
+          prop="password"
+          :help="validationErrors ? validationErrors.password : ''"
+          :validate-status="error.status"
+          has-feedback
+          class="mb-0"
+        >
           <a-input
-            v-decorator="[
-              'password',
-              {
-                rules: [
-                  { required: true, message: 'Please input your Password!' },
-                ],
-              },
-            ]"
+            v-model="ruleForm.password"
+            placeholder="Password *"
             type="password"
-            placeholder="Password"
+            autocomplete="off"
           >
             <a-icon
               slot="prefix"
@@ -47,16 +47,13 @@
               style="color: rgba(0, 0, 0, 0.25)"
             />
           </a-input>
-        </a-form-item>
-        <a-form-item class="mb-0">
+        </a-form-model-item>
+
+        <a-form-model-item class="mb-2">
           <a-checkbox
-            v-decorator="[
-              'remember',
-              {
-                valuePropName: 'checked',
-                initialValue: true,
-              },
-            ]"
+            v-model="ruleForm.remember_me"
+            checked
+            @change="toggleCheckedModal"
           >
             Remember me
           </a-checkbox>
@@ -65,15 +62,19 @@
             class="login-form-forgot"
             >Forgot password</NuxtLink
           >
-          <a-button type="primary" html-type="submit" class="login-form-button">
-            Log in
+          <a-button
+            html-type="submit"
+            class="login-form-button"
+            :type="loading ? 'danger' : 'primary'"
+            :loading="loading"
+            @click.prevent="login('ruleForm')"
+          >
+            {{ loading ? 'Logging in ...' : 'Log in' }}
           </a-button>
           Or
           <NuxtLink to="/authentication/registration">register now!</NuxtLink>
-        </a-form-item>
-      </a-form>
-
-      <a-button type="primary" @click="login()">Login</a-button>
+        </a-form-model-item>
+      </a-form-model>
     </div>
   </div>
 </template>
@@ -83,16 +84,56 @@ export default {
   name: 'Login',
   middleware: ['guest'],
   data() {
-    return {
-      details: {
-        // _token: this.csrf,
-        email: 'johnson.gitonga@oxygene.co.ke',
-        password: '111',
-        // email: 'alfred.maina@oxygene.co.ke',
-        // password: '111',
-      },
-      csrf: '',
+    let checkPending
+    const validatePass = (rule, value, callback) => {
+      clearTimeout(checkPending)
+      if (value === '') {
+        callback(new Error('Please input your password'))
+      } else {
+        checkPending = setTimeout(() => {
+          if (value < 6) {
+            callback(new Error('Password must be greater than 6'))
+          } else {
+            callback()
+          }
+        }, 500)
+      }
+      callback()
     }
+    return {
+      ruleForm: {
+        // _token: this.csrf,
+        email: '', // jtechinfo3@gmail.com
+        password: '',
+        remember_me: true,
+      },
+      rules: {
+        password: [{ validator: validatePass, trigger: 'change' }],
+        email: [
+          {
+            type: 'email',
+            message: 'The input is not valid E-mail!',
+          },
+          {
+            required: true,
+            message: 'Please input your E-mail!',
+          },
+        ],
+      },
+      // csrf: '',
+      loading: false,
+      checked: true,
+      error: {},
+    }
+  },
+  computed: {
+    validationErrors() {
+      if (Object.keys(this.error).length !== 0) {
+        return this.error.formErrors
+      } else {
+        return {}
+      }
+    },
   },
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'normal_login' })
@@ -104,21 +145,85 @@ export default {
     this.csrf = Laravel.csrfToken
   },
   methods: {
-    handleSubmit(e) {
-      e.preventDefault()
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          //  console.log('Received values of form: ', values)
-        }
-      })
+    async login(formName) {
+      try {
+        setTimeout(() => {
+          this.loading = false
+        }, 800)
+        this.loading = true
+
+        const result = await this.$refs[formName].validate()
+        if (result)
+          await this.$axios
+            .$post('login', this.ruleForm)
+            .then((response) => {
+              this.error = response
+
+              setTimeout(() => {
+                this.error = {
+                  status: 'warning',
+                  message: 'Logging you in ...',
+                }
+              }, 1500)
+
+              // login user
+              setTimeout(() => {
+                this.$auth
+                  .loginWith('laravelSanctum', {
+                    data: {
+                      email: this.ruleForm.email,
+                      password: this.ruleForm.password,
+                    },
+                  })
+                  .then(() => {
+                    if (this.$store.$auth.user.length !== 0) {
+                      if (this.$store.$auth.user[0].role_id === 2) {
+                        this.$router.push('/dashboard/admin')
+                      } else if (this.$store.$auth.user[0].role_id === 3) {
+                        this.$router.push('/dashboard/employee')
+                      } else if (this.$store.$auth.user[0].role_id === 4) {
+                        this.$router.push('/dashboard/client')
+                      } else {
+                        this.logout()
+                      }
+                      // success message
+                      if (this.$auth.loggedIn) {
+                        this.$notification.success({
+                          message: 'Notification',
+                          description:
+                            'Successfully logged in as ' +
+                            this.$store.$auth.user[0].nickname,
+                          placement: 'bottom',
+                        })
+                      }
+                    }
+                  })
+              }, 2800)
+            })
+            .catch((err) => {
+              this.errorFormAlerts(err)
+            })
+      } catch (error) {}
     },
-    login() {
-      this.$auth
-        .loginWith('laravelSanctum', {
-          data: this.details,
+    // Error
+    errorFormAlerts(response) {
+      this.error = response
+    },
+    // CHECK AGREEMENT,
+    toggleCheckedModal() {
+      this.checked = !this.checked
+    },
+    async logout() {
+      try {
+        this.$notification.info({
+          message: 'Notification',
+          description: 'Successfully logged out!',
+          placement: 'bottom',
         })
-        .then((response) => console.log(response))
-        .catch((error) => console.log(error))
+        await this.$auth.logout()
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 }

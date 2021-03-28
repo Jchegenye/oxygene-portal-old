@@ -4,22 +4,16 @@
     <a href="javascript:void(0);" @click.prevent="logout()">logout</a>
 
     <!-- Menu -->
-    <ul v-if="loggedInUser.role_id === 2">
-      <li><NuxtLink to="/dashboard">dashboard</NuxtLink></li>
-      <li><NuxtLink to="/dashboard/admin">admin</NuxtLink></li>
-    </ul>
-
-    <ul v-if="loggedInUser.role_id === 3">
-      <li><NuxtLink to="/dashboard">dashboard</NuxtLink></li>
-      <li><NuxtLink to="/dashboard/client">client</NuxtLink></li>
-    </ul>
+    <h1>Lounge Area</h1>
+    <p>This is your waiting area, if you have issues kindly contact us</p>
+    <a-button>Refresh</a-button>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Dashboard',
-  middleware: ['auth'], // 'client'
+  middleware: ['auth'],
   computed: {
     loggedInUser() {
       if (

@@ -28,7 +28,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // register
 Route::post('register', 'Auth\RegisterController@register')->name('register');
-Route::post('login', 'Auth\LoginController@login')->name('login');
 
 // login
 Route::post('login', function(Request $request){
@@ -42,7 +41,10 @@ Route::post('login', function(Request $request){
 
     $request->session()->regenerate();
 
-    return response()->json(null, 201);
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Your credentials are correct'
+    ], 201);
 });
 
 // logout
@@ -54,6 +56,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
         $request->session()->regenerateToken();
 
-        return response()->json(null, 200);
+        return response()->json(null, 201);
     });
 });

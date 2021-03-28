@@ -3,17 +3,17 @@
     Welcome {{ loggedInUser.nickname }}
     <a href="javascript:void(0);" @click.prevent="logout()">logout</a>
 
-    <ul v-if="loggedInUser.role_id === 4">
+    <ul v-if="loggedInUser.role_id === 3">
       <li><NuxtLink to="/dashboard">dashboard</NuxtLink></li>
-      <li><NuxtLink to="/dashboard/client">client</NuxtLink></li>
+      <li><NuxtLink to="/dashboard/employee">employee</NuxtLink></li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ClientDashboard',
-  middleware: ['auth', 'client'],
+  name: 'EmployeeDashboard',
+  middleware: ['auth', 'employee'],
   computed: {
     loggedInUser() {
       if (

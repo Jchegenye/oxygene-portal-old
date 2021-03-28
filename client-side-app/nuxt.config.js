@@ -22,9 +22,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    '@/plugins/antd-ui'
-  ],
+  plugins: ['@/plugins/antd-ui', '~/plugins/axios'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -52,8 +50,10 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: process.env.BASE_URL,
-    credentials: true
+    credentials: true,
   },
+
+  // store: {},
 
   // Laravel Sanctum conf
   auth: {
@@ -63,13 +63,13 @@ export default {
         url: process.env.BASE_URL,
         endpoints: {
           login: {
-            url: process.env.API_URL+'/login',
+            url: process.env.API_URL + '/login',
           },
           logout: {
-            url: process.env.API_URL+'/logout',
+            url: process.env.API_URL + '/logout',
           },
           user: {
-            url: process.env.API_URL+'/user',
+            url: process.env.API_URL + '/user',
           },
         },
         user: {
@@ -96,16 +96,11 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: [
-      '@nuxtjs/auth-next'
-    ],
+    transpile: ['@nuxtjs/auth-next'],
     babel: {
-      plugins: [
-        ['import', { libraryName: 'ant-design-vue', style: 'css' } ]
-      ]
-    }
+      plugins: [['import', { libraryName: 'ant-design-vue', style: 'css' }]],
+    },
   },
   // https://nuxtjs.org/blog/going-full-static
-  target: 'static'
-  
+  target: 'static',
 }

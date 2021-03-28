@@ -26,6 +26,11 @@ export default {
   methods: {
     async logout() {
       try {
+        this.$notification.info({
+          message: 'Notification',
+          description: 'Successfully logged out!',
+          placement: 'bottom',
+        })
         await this.$auth.logout()
       } catch (error) {
         console.log(error)

@@ -3,6 +3,8 @@
     <div>
       <Logo />
       <Tagline />
+      <FormAlerts :errors="error" />
+
       <a-form-model
         id="components-form-demo-normal-login"
         ref="ruleForm"
@@ -11,7 +13,12 @@
         class="login-form"
       >
         <!-- email -->
-        <a-form-model-item prop="email" has-feedback>
+        <a-form-model-item
+          prop="email"
+          :help="validationErrors ? validationErrors.email : ''"
+          :validate-status="error.status"
+          has-feedback
+        >
           <a-input v-model="ruleForm.email" type="email" placeholder="E-mail *">
             <a-icon
               slot="prefix"
@@ -25,6 +32,8 @@
         <a-form-model-item>
           <a-form-model-item
             prop="password"
+            :help="validationErrors ? validationErrors.password : ''"
+            :validate-status="error.status"
             has-feedback
             :style="{ display: 'inline-block', width: 'calc(50% - 12px)' }"
             class="mb-0"
@@ -73,6 +82,8 @@
         <!-- first name -->
         <a-form-model-item
           prop="first_name"
+          :help="validationErrors ? validationErrors.first_name : ''"
+          :validate-status="error.status"
           v-bind="formItemLayout"
           has-feedback
           class="mb-2"
@@ -87,7 +98,12 @@
         </a-form-model-item>
 
         <!-- last name -->
-        <a-form-model-item prop="last_name" v-bind="formItemLayout">
+        <a-form-model-item
+          prop="last_name"
+          :help="validationErrors ? validationErrors.last_name : ''"
+          :validate-status="error.status"
+          v-bind="formItemLayout"
+        >
           <span slot="label">Last Name</span>
           <a-input v-model="ruleForm.last_name" placeholder="Last Name" />
         </a-form-model-item>
@@ -143,12 +159,11 @@ export default {
     const validatePass = (rule, value, callback) => {
       clearTimeout(checkPending)
       if (value === '') {
-        callback(new Error('Please input the password'))
+        callback(new Error('Please input your password'))
       } else {
         checkPending = setTimeout(() => {
           if (this.ruleForm.checkPass !== '') {
             if (this.$refs.ruleForm) {
-              console.log(this.$refs.ruleForm)
               this.$refs.ruleForm.validateField('checkPass')
             }
           } else if (value < 6) {
@@ -171,15 +186,15 @@ export default {
     }
     return {
       ruleForm: {
-        email: 'nelly@gmail.com',
-        password: '111',
-        checkPass: '111',
-        first_name: 'Nelly',
-        last_name: 'Muho',
+        email: '',
+        password: '',
+        checkPass: '',
+        first_name: '',
+        last_name: '',
         agreement: true,
-        // _token: this.csrf,
+        _token: this.csrf,
       },
-      // csrf: '',
+      csrf: '',
       formItemLayout: {
         labelCol: {
           xs: { span: 24 },
@@ -217,15 +232,24 @@ export default {
       },
       loading: false,
       checked: true,
-      error: null,
+      error: {},
     }
   },
-  // mounted() {
-  //   const Laravel = {
-  //     csrfToken: '{{csrf_token()}}',
-  //   }
-  //   this.csrf = Laravel.csrfToken
-  // },
+  computed: {
+    validationErrors() {
+      if (Object.keys(this.error).length !== 0) {
+        return this.error.formErrors
+      } else {
+        return {}
+      }
+    },
+  },
+  mounted() {
+    const Laravel = {
+      csrfToken: '{{csrf_token()}}',
+    }
+    this.csrf = Laravel.csrfToken
+  },
   methods: {
     async submitForm(formName) {
       try {
@@ -239,62 +263,44 @@ export default {
           await this.$axios
             .$post('register', this.ruleForm)
             .then((response) => {
+              this.error = response
+
+              setTimeout(() => {
+                this.error = {
+                  status: 'warning',
+                  message: 'Logging you in ...',
+                }
+              }, 1500)
+
               // login user
-              this.$auth.loginWith('laravelSanctum', {
-                data: {
-                  email: this.ruleForm.email,
-                  password: this.ruleForm.password,
-                },
-              })
-              this.$router.push('/')
-              // console.log(response)
-              return response.data
+              setTimeout(() => {
+                this.$auth
+                  .loginWith('laravelSanctum', {
+                    data: {
+                      email: this.ruleForm.email,
+                      password: this.ruleForm.password,
+                    },
+                  })
+                  .then(() => {
+                    if (this.$store.$auth.user.length !== 0) {
+                      if (this.$store.$auth.user[0].role_id === 2) {
+                        this.$router.push('/dashboard/admin')
+                      } else if (this.$store.$auth.user[0].role_id === 3) {
+                        this.$router.push('/dashboard/employee')
+                      } else if (this.$store.$auth.user[0].role_id === 4) {
+                        this.$router.push('/dashboard/client')
+                      } else {
+                        this.logout()
+                      }
+                    }
+                  })
+              }, 2800)
             })
-            .catch(function (error) {
-              console.log(error)
+            .catch((err) => {
+              this.errorFormAlerts(err)
             })
-
-        // await this.$refs[formName].validate((valid) => {
-        //   if (valid) {
-        //     this.$axios
-        //       .$post('register', {
-        //         withCredentials: true,
-        //         headers: {
-        //           Accept: 'application/json',
-        //           'Content-Type': 'x-www-form-urlencoded',
-        //         },
-        //         data: this.ruleForm,
-        //       })
-        //       .then((res) => {
-        //         this.loading = true
-        //         alert('submit!')
-        //       })
-        //   } else {
-        //     this.loading = true
-        //     console.log('error submit!!')
-        //     return false
-        //   }
-        // })
-      } catch (e) {
-        this.error = e
-      }
+      } catch (error) {}
     },
-
-    // submitForm(formName) {
-    //   this.$refs[formName].validate((valid) => {
-    //     if (valid) {
-    //       this.loading = true
-    //       alert('submit!')
-    //     } else {
-    //       this.loading = true
-    //       console.log('error submit!!')
-    //       return false
-    //     }
-    //   })
-    //   setTimeout(() => {
-    //     this.loading = false
-    //   }, 1000)
-    // },
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
@@ -313,6 +319,22 @@ export default {
     // CHECK AGREEMENT,
     toggleCheckedModal() {
       this.checked = !this.checked
+    },
+    // Error
+    errorFormAlerts(response) {
+      this.error = response
+    },
+    async logout() {
+      try {
+        this.$notification.info({
+          message: 'Notification',
+          description: 'Successfully logged out!',
+          placement: 'bottom',
+        })
+        await this.$auth.logout()
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 }
