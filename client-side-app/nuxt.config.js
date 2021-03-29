@@ -53,8 +53,6 @@ export default {
     credentials: true,
   },
 
-  // store: {},
-
   // Laravel Sanctum conf
   auth: {
     strategies: {
@@ -64,6 +62,9 @@ export default {
         endpoints: {
           login: {
             url: process.env.API_URL + '/login',
+          },
+          register: {
+            url: process.env.API_URL + '/register',
           },
           logout: {
             url: process.env.API_URL + '/logout',
@@ -75,6 +76,21 @@ export default {
         user: {
           property: false,
         },
+      },
+      google: {
+        clientId: '...'
+      },
+      cookie: {
+        cookie: {
+          // (optional) If set we check this cookie exsistence for loggedIn check
+          name: 'XSRF-TOKEN',
+        },
+        endpoints: {
+          // (optional) If set, we send a get request to this endpoint before login
+          csrf: {
+            url: ''
+          }
+        }
       },
     },
     scopeKey: 'label',

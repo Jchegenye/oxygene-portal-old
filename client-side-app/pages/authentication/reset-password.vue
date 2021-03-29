@@ -61,7 +61,7 @@
             />
           </a-input>
         </a-form-item>
-        <a-form-item has-feedback>
+        <a-form-item has-feedback class="mb-0">
           <a-input
             v-decorator="[
               'confirm',
@@ -107,7 +107,7 @@
 <script>
 export default {
   name: 'ResetPassword',
-  middleware: ['auth'],
+  middleware: ['guest'], // auth
   data() {
     return {
       formItemLayout: {

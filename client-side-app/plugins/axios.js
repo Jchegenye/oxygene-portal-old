@@ -14,17 +14,23 @@ export default function ({ $axios, $store }) {
     },
     (error) => {
       // console.log(JSON.stringify(error.response) + 'erros')
-      if (error.response.status === 422) {
+      if (error.response.status === 422 || error.response.status === 419) {
         const values = {
           message: error.response.data.message,
-          status: 'warning',
+          status: 'error',
           formErrors: error.response.data.errors,
         }
         return Promise.reject(values)
       } else if (error.response.status === 401) {
         const values = {
           message: error.response.statusText,
-          status: 'info',
+          status: 'error',
+        }
+        return Promise.reject(values)
+      } else if (error.response.status === 404) {
+        const values = {
+          message: "It look's like the link doesn't exist!",
+          status: 'error',
         }
         return Promise.reject(values)
       } else if (error.response.status === 500) {

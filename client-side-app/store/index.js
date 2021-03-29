@@ -9,10 +9,7 @@ export const actions = {
 }
 
 export const mutations = {
-  setErrors(state, errors) {
-    state.errors = errors
-  },
-  setInitialData(state, errorMessage) {
-    state.errorMessage = errorMessage
+  setNews(state, news) {
+    state.list = news
   },
 }

@@ -153,7 +153,7 @@
 <script>
 export default {
   name: 'Registration',
-  middleware: ['guest'],
+  // middleware: ['guest'],
   data() {
     let checkPending
     const validatePass = (rule, value, callback) => {
@@ -186,13 +186,13 @@ export default {
     }
     return {
       ruleForm: {
-        email: '',
-        password: '',
-        checkPass: '',
-        first_name: '',
-        last_name: '',
+        email: 'nelly@oxygene.co.ke',
+        password: '111',
+        checkPass: '111',
+        first_name: 'Nelly C',
+        last_name: 'Asumu',
         agreement: true,
-        _token: this.csrf,
+        // _token: this.csrf,
       },
       csrf: '',
       formItemLayout: {

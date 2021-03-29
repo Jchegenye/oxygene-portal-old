@@ -47,6 +47,10 @@ Route::post('login', function(Request $request){
     ], 201);
 });
 
+// Reset Password
+Route::post('password/forgot', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
 // logout
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', function(Request $request){
