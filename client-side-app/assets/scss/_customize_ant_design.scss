@@ -303,3 +303,26 @@ a:hover {
 hr {
   border-top: 1px solid #eee;
 }
+
+// WIZARD
+// .ant-steps-item-process .ant-steps-item-icon {
+//   background: $color-orange !important;
+// }
+// .ant-steps-item-process .ant-steps-item-icon {
+//   border-color: $color-orange !important;
+// }
+
+.ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot{
+  background: $color-orange !important;
+}
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
+  background: $color-dark-blue !important;
+}
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+  background-color: $color-dark-blue !important;
+}
+
+
+// .login-form .ant-input{
+//   height: 40px;
+// }

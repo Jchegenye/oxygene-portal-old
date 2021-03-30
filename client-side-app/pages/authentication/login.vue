@@ -75,6 +75,7 @@
           <NuxtLink to="/authentication/registration">register now!</NuxtLink>
         </a-form-model-item>
       </a-form-model>
+      <a-button @click.prevent="login('ruleForm')">Log in</a-button>
     </div>
   </div>
 </template>
@@ -102,9 +103,9 @@ export default {
     }
     return {
       ruleForm: {
-        // _token: this.csrf,
-        email: '', // jtechinfo3@gmail.com
-        password: '',
+        _token: this.csrf,
+        email: 'jtechinfo3@gmail.com', // jtechinfo3@gmail.com
+        password: '111',
         remember_me: true,
       },
       rules: {
@@ -120,7 +121,7 @@ export default {
           },
         ],
       },
-      // csrf: '',
+      csrf: '',
       loading: false,
       checked: true,
       error: {},

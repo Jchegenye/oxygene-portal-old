@@ -153,7 +153,7 @@
 <script>
 export default {
   name: 'Registration',
-  // middleware: ['guest'],
+  middleware: ['guest'],
   data() {
     let checkPending
     const validatePass = (rule, value, callback) => {

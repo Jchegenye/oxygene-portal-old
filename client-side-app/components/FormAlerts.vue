@@ -11,6 +11,11 @@
 <script>
 export default {
   name: 'FormAlerts',
-  props: ['errors'],
+  props: {
+    errors: {
+      type: [Array, Object],
+      required: true,
+    },
+  },
 }
 </script>
