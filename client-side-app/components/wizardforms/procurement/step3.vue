@@ -25,6 +25,8 @@
             </a-button>
           </a-upload>
         </td>
+      </tr>
+      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -36,8 +38,6 @@
             </a-button>
           </a-upload>
         </td>
-      </tr>
-      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -50,6 +50,8 @@
             </a-button>
           </a-upload>
         </td>
+      </tr>
+      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -100,6 +102,8 @@
             </a-button>
           </a-upload>
         </td>
+      </tr>
+      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -111,8 +115,6 @@
             </a-button>
           </a-upload>
         </td>
-      </tr>
-      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -125,6 +127,8 @@
             </a-button>
           </a-upload>
         </td>
+      </tr>
+      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -137,8 +141,6 @@
             </a-button>
           </a-upload>
         </td>
-      </tr>
-      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -151,6 +153,8 @@
             </a-button>
           </a-upload>
         </td>
+      </tr>
+      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -163,8 +167,6 @@
             </a-button>
           </a-upload>
         </td>
-      </tr>
-      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -176,6 +178,8 @@
             >
           </a-upload>
         </td>
+      </tr>
+      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -188,8 +192,6 @@
             >
           </a-upload>
         </td>
-      </tr>
-      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -202,6 +204,8 @@
             >
           </a-upload>
         </td>
+      </tr>
+      <tr>
         <td>
           <a-upload
             :file-list="fileList"
@@ -264,7 +268,44 @@ export default {
     },
   },
   data() {
-    return { formData: this.ruleForm }
+    return { formData: this.ruleForm, fileList: [], uploading: false }
+  },
+  methods: {
+    handleRemove(file) {
+      const index = this.fileList.indexOf(file)
+      const newFileList = this.fileList.slice()
+      newFileList.splice(index, 1)
+      this.fileList = newFileList
+    },
+    beforeUpload(file) {
+      this.fileList = [...this.fileList, file]
+      return false
+    },
+    handleUpload() {
+      const { fileList } = this
+      const formData = new FormData()
+      fileList.forEach((file) => {
+        formData.append('files[]', file)
+      })
+      this.uploading = true
+
+      // You can use any AJAX library you like
+      this.$axios.$post({
+        url: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+        method: 'post',
+        processData: false,
+        data: formData,
+        success: () => {
+          this.fileList = []
+          this.uploading = false
+          this.$message.success('upload successfully.')
+        },
+        error: () => {
+          this.uploading = false
+          this.$message.error('upload failed.')
+        },
+      })
+    },
   },
 }
 </script>

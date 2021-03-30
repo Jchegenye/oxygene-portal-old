@@ -76,7 +76,7 @@
       label="KRA PIN No. *"
     >
       <a-input v-model="formData.kra_pin_no" autocomplete="off">
-        <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" />
+        <a-icon slot="prefix" type="" style="color: rgba(0, 0, 0, 0.25)" />
       </a-input>
     </a-form-model-item>
 
@@ -135,7 +135,7 @@
           placeholder="Name"
           autocomplete="off"
         >
-          <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" />
+          <a-icon slot="prefix" type="" style="color: rgba(0, 0, 0, 0.25)" />
         </a-input>
       </a-form-model-item>
       <a-form-model-item
@@ -154,7 +154,7 @@
           type="email"
           autocomplete="off"
         >
-          <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" />
+          <a-icon slot="prefix" type="" style="color: rgba(0, 0, 0, 0.25)" />
         </a-input>
       </a-form-model-item>
       <a-form-model-item
@@ -174,7 +174,7 @@
           min="0"
           autocomplete="off"
         >
-          <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" />
+          <a-icon slot="prefix" type="" style="color: rgba(0, 0, 0, 0.25)" />
         </a-input>
       </a-form-model-item>
     </a-form-model-item>
@@ -210,7 +210,7 @@
         type="textarea"
         autocomplete="off"
       >
-        <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" />
+        <a-icon slot="prefix" type="" style="color: rgba(0, 0, 0, 0.25)" />
       </a-input>
     </a-form-model-item>
     <hr />
@@ -239,18 +239,9 @@
     </a-button>
 
     <a-form-model-item class="mb-0">
-      <table id="mytable" class="table table-borderless items mt-0">
-        <draggable
-          tag="tbody"
-          :list="formData.list"
-          class="list-group"
-          handle=".handle"
-        >
-          <tr
-            v-for="(element, idx) in formData.list"
-            :key="idx"
-            class="list-group-item p-0"
-          >
+      <table id="mytable" class="table table-border items mt-0">
+        <draggable tag="tbody" :list="formData.list" handle=".handle">
+          <tr v-for="(element, idx) in formData.list" :key="idx" class="p-0">
             <!-- <td scope="row" class="drag-columns">
               <a-icon type="pic-left" />
             </td> -->
@@ -261,7 +252,7 @@
 
             <td class="p-0">
               <tr>
-                <td>
+                <td class="w-25">
                   <a-form-model-item
                     :help="
                       validationErrors ? validationErrors.director_name : ''
@@ -283,7 +274,7 @@
                     </a-input>
                   </a-form-model-item>
                 </td>
-                <td>
+                <td class="w-25">
                   <a-form-model-item
                     :help="
                       validationErrors ? validationErrors.director_email : ''
@@ -384,7 +375,7 @@
               </tr>
             </td>
 
-            <td class="w-15">
+            <td>
               <span v-if="idx != 0" class="text-danger" @click="removeAt(idx)">
                 <a-icon slot="prefix" type="close" />
                 Cancel

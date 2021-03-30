@@ -128,6 +128,9 @@ h1.mb-0.font-weight-900 {
   min-width: 150px;
 }
 #wizard-form .ant-btn .anticon{
-  line-height: initial;
+  line-height: initial !important;
   font-size: 12px;
+}
+.ant-btn svg {
+  vertical-align: initial;
 }

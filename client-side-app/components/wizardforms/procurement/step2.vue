@@ -27,6 +27,7 @@
       label="Other Description"
       :hidden="formData.litigation === 'yes' ? false : true"
     >
+      <!-- litigation_file -->
       <a-upload-dragger
         name="file"
         :multiple="false"
@@ -71,6 +72,7 @@ export default {
   },
   methods: {
     handleChange(info) {
+      // litigation_file
       const status = info.file.status
       if (status !== 'uploading') {
         console.log(info.file, info.fileList)
