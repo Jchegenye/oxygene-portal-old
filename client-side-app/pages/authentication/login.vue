@@ -104,8 +104,8 @@ export default {
     return {
       ruleForm: {
         _token: this.csrf,
-        email: 'jtechinfo3@gmail.com', // jtechinfo3@gmail.com
-        password: '111',
+        email: '', // jtechinfo3@gmail.com
+        password: '',
         remember_me: true,
       },
       rules: {

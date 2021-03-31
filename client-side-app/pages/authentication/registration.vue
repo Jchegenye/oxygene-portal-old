@@ -186,11 +186,11 @@ export default {
     }
     return {
       ruleForm: {
-        email: 'nelly@oxygene.co.ke',
-        password: '111',
-        checkPass: '111',
-        first_name: 'Nelly C',
-        last_name: 'Asumu',
+        email: '',
+        password: '',
+        checkPass: '',
+        first_name: '',
+        last_name: '',
         agreement: true,
         // _token: this.csrf,
       },
